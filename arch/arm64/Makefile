@@ -19,8 +19,30 @@ LIBGCC 		:= $(shell $(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name)
 
 KBUILD_DEFCONFIG := defconfig
 
-KBUILD_CFLAGS	+= -mgeneral-regs-only
-KBUILD_CFLAGS	+= -fno-pic
+# Make variables (CC, etc...)\
+
+O1_FLAGS := \
+	-fgraphite \
+	-fgraphite-identity \
+	-floop-flatten \
+	-floop-parallelize-all \
+	-ftree-loop-linear \
+	-floop-interchange \
+	-floop-strip-mine \
+	-floop-block \
+
+O2_FLAGS := \
+	--param l1-cache-size=384 \
+	--param l2-cache-size=2048 \
+	-march=armv8-a \
+	-pthread \
+	-DNDEBUG \
+	-w \
+
+Oall_FLAGS := $(O1_FLAGS) $(O2_FLAGS)
+
+KBUILD_CFLAGS	+= -mgeneral-regs-only 
+KBUILD_CFLAGS	+= -fno-pic $(Oall_FLAGS)
 ifeq ($(CONFIG_CPU_BIG_ENDIAN), y)
 KBUILD_CPPFLAGS	+= -mbig-endian
 AS		+= -EB
@@ -100,3 +122,4 @@ define archhelp
   echo  '                  (distribution) /sbin/installkernel or'
   echo  '                  install to $$(INSTALL_PATH) and run lilo'
 endef
+

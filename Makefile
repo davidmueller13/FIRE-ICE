@@ -241,7 +241,7 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 
 HOSTCC       = gcc
 HOSTCXX      = g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
+HOSTCFLAGS   = -O2 -fomit-frame-pointer 
 HOSTCXXFLAGS = -O2
 
 # Decide whether to build built-in, modular, or both.
@@ -326,7 +326,7 @@ include $(srctree)/scripts/Kbuild.include
 
 AS		= $(CROSS_COMPILE)as
 LD		= $(CROSS_COMPILE)ld
-CC		= $(CROSS_COMPILE)gcc
+CC		= $(CROSS_COMPILE)gcc -pthread
 CPP		= $(CC) -E
 AR		= $(CROSS_COMPILE)ar
 NM		= $(CROSS_COMPILE)nm
@@ -342,11 +342,13 @@ CHECK		= sparse
 
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
-CFLAGS_MODULE   =
-AFLAGS_MODULE   =
-LDFLAGS_MODULE  =
-CFLAGS_KERNEL	=
-AFLAGS_KERNEL	=
+KERNELFLAGS	= -pthread -fgcse-lm -fgcse-sm -fsched-spec-load -ffast-math -fsingle-precision-constant -DNDEBUG -mtune=cortex-a57 -mcpu=cortex-a57 --param l1-cache-size=384 --param l2-cache-size=2048
+MODFLAGS	= -DMODULE -lto $(KERNELFLAGS)
+CFLAGS_MODULE   = $(MODFLAGS)
+AFLAGS_MODULE   = $(MODFLAGS)
+LDFLAGS_MODULE  = -T $(srctree)/scripts/module-common.lds
+CFLAGS_KERNEL	= $(KERNELFLAGS) -march=armv8-a+crypto
+AFLAGS_KERNEL	= $(KERNELFLAGS)
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
 
@@ -367,15 +369,15 @@ LINUXINCLUDE    := \
 		-Iinclude \
 		$(USERINCLUDE)
 
-KBUILD_CPPFLAGS := -D__KERNEL__
+KBUILD_CPPFLAGS := -D__KERNEL__ $(KERNELFLAGS)
 
 KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
 		   -fno-delete-null-pointer-checks
-KBUILD_AFLAGS_KERNEL :=
-KBUILD_CFLAGS_KERNEL :=
+KBUILD_AFLAGS_KERNEL := $(KERNELFLAGS)
+KBUILD_CFLAGS_KERNEL := $(KERNELFLAGS)
 KBUILD_AFLAGS   := -D__ASSEMBLY__
 KBUILD_AFLAGS_MODULE  := -DMODULE
 KBUILD_CFLAGS_MODULE  := -DMODULE
@@ -1438,3 +1440,4 @@ FORCE:
 # Declare the contents of the .PHONY variable as phony.  We keep that
 # information in a variable so we can use it in if_changed and friends.
 .PHONY: $(PHONY)
+
