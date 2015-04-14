@@ -41,6 +41,7 @@
 #include <linux/memblock.h>
 #include <linux/of_fdt.h>
 #include <linux/of_platform.h>
+#include <linux/personality.h>
 
 #include <asm/cputype.h>
 #include <asm/elf.h>
@@ -196,6 +197,19 @@ bool arch_match_cpu_phys_id(int cpu, u64 phys_id)
 	return phys_id == cpu_logical_map(cpu);
 }
 
+struct cpuinfo_arm64 {
+	struct cpu	cpu;
+	u32		reg_midr;
+};
+
+static DEFINE_PER_CPU(struct cpuinfo_arm64, cpu_data);
+
+void cpuinfo_store_cpu(void)
+{
+	struct cpuinfo_arm64 *info = this_cpu_ptr(&cpu_data);
+	info->reg_midr = read_cpuid_id();
+}
+
 static void __init setup_processor(void)
 {
 	struct cpu_info *cpu_info;
@@ -296,6 +310,8 @@ static struct machine_desc * __init setup_machine_fdt(phys_addr_t dt_phys)
 	struct machine_desc *mdesc, *mdesc_best = NULL;
 	unsigned int score, mdesc_score = ~1;
 	unsigned long dt_root;
+
+	cpuinfo_store_cpu();
 
 	/* Check we have a non-NULL DT pointer */
 	if (!dt_phys) {
@@ -478,14 +494,12 @@ static int __init arm64_device_init(void)
 }
 arch_initcall(arm64_device_init);
 
-static DEFINE_PER_CPU(struct cpu, cpu_data);
-
 static int __init topology_init(void)
 {
 	int i;
 
 	for_each_possible_cpu(i) {
-		struct cpu *cpu = &per_cpu(cpu_data, i);
+		struct cpu *cpu = &per_cpu(cpu_data.cpu, i);
 		cpu->hotpluggable = 1;
 #if !defined(CONFIG_HOTPLUG_CPU0)
 		if (i == 0)
@@ -521,12 +535,12 @@ static void denver_show(struct seq_file *m)
 
 static int c_show(struct seq_file *m, void *v)
 {
-	int i;
-
-	seq_printf(m, "Processor\t: %s rev %d (%s)\n",
-		   cpu_name, read_cpuid_id() & 15, ELF_PLATFORM);
+	int i, j;
 
 	for_each_online_cpu(i) {
+		struct cpuinfo_arm64 *cpuinfo = &per_cpu(cpu_data, i);
+		u32 midr = cpuinfo->reg_midr;
+
 		/*
 		 * glibc reads /proc/cpuinfo to determine the number of
 		 * online processors, looking for lines beginning with
