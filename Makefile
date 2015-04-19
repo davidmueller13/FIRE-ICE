@@ -241,8 +241,8 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 
 HOSTCC       = gcc
 HOSTCXX      = g++
-HOSTCFLAGS   = -O2 -fomit-frame-pointer 
-HOSTCXXFLAGS = -O2
+HOSTCFLAGS   = -Ofast -fomit-frame-pointer 
+HOSTCXXFLAGS = -Ofast
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -342,7 +342,7 @@ CHECK		= sparse
 
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
-KERNELFLAGS	= -pthread -fgcse-lm -fgcse-sm -fsched-spec-load -ffast-math -fsingle-precision-constant -DNDEBUG -mtune=cortex-a57 -mcpu=cortex-a57 --param l1-cache-size=384 --param l2-cache-size=2048
+KERNELFLAGS	= -pthread -fgcse-lm -fgcse-sm -fsched-spec-load -ffast-math -fsingle-precision-constant -DNDEBUG -march=armv8-a -mtune=cortex-a57 -mcpu=cortex-a57 --param l1-cache-size=384 --param l2-cache-size=2048
 MODFLAGS	= -DMODULE -lto $(KERNELFLAGS)
 CFLAGS_MODULE   = $(MODFLAGS)
 AFLAGS_MODULE   = $(MODFLAGS)
@@ -578,7 +578,7 @@ else
 ifdef CONFIG_LESS_GCC_OPT
 KBUILD_CFLAGS	+= -O1
 else
-KBUILD_CFLAGS	+= -O2
+KBUILD_CFLAGS	+= -Ofast
 endif
 endif
 
@@ -1440,4 +1440,5 @@ FORCE:
 # Declare the contents of the .PHONY variable as phony.  We keep that
 # information in a variable so we can use it in if_changed and friends.
 .PHONY: $(PHONY)
+
 
