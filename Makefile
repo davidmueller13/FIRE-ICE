@@ -241,8 +241,8 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 
 HOSTCC       = gcc
 HOSTCXX      = g++
-HOSTCFLAGS   = -Ofast -fomit-frame-pointer 
-HOSTCXXFLAGS = -Ofast
+HOSTCFLAGS   = -Ofast -fno-tree-vectorize -fomit-frame-pointer 
+HOSTCXXFLAGS = -Ofast -fno-tree-vectorize -fgraphite
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -326,7 +326,7 @@ include $(srctree)/scripts/Kbuild.include
 
 AS		= $(CROSS_COMPILE)as
 LD		= $(CROSS_COMPILE)ld
-CC		= $(CROSS_COMPILE)gcc -pthread
+CC		= $(CROSS_COMPILE)gcc
 CPP		= $(CC) -E
 AR		= $(CROSS_COMPILE)ar
 NM		= $(CROSS_COMPILE)nm
@@ -342,7 +342,7 @@ CHECK		= sparse
 
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
-KERNELFLAGS	= -pthread -fgcse-lm -fgcse-sm -fsched-spec-load -ffast-math -fsingle-precision-constant -DNDEBUG -march=armv8-a -mtune=cortex-a57 -mcpu=cortex-a57 --param l1-cache-size=384 --param l2-cache-size=2048
+KERNELFLAGS	= -fgcse-lm -fgcse-sm -fsched-spec-load -ffast-math -fsingle-precision-constant -DNDEBUG -march=armv8-a -mtune=cortex-a57 -mcpu=cortex-a57 --param l1-cache-size=384 --param l2-cache-size=2048
 MODFLAGS	= -DMODULE -lto $(KERNELFLAGS)
 CFLAGS_MODULE   = $(MODFLAGS)
 AFLAGS_MODULE   = $(MODFLAGS)
@@ -578,7 +578,7 @@ else
 ifdef CONFIG_LESS_GCC_OPT
 KBUILD_CFLAGS	+= -O1
 else
-KBUILD_CFLAGS	+= -Ofast
+KBUILD_CFLAGS	+= -Ofast -fmodulo-sched -fmodulo-sched-allow-regmoves -fno-tree-vectorize -fno-inline-functions
 endif
 endif
 
