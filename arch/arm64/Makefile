@@ -31,7 +31,6 @@ O1_FLAGS := \
 	-floop-strip-mine \
 	-floop-block \
 	-floop-unroll-and-jam \
-	-floop-parallelize-all \
 
 O2_FLAGS := \
 	--param l1-cache-size=384 \
@@ -39,12 +38,13 @@ O2_FLAGS := \
 	-mtune=cortex-a57 \
 	-mcpu=cortex-a57 \
 	-march=armv8-a \
+	-pthread \
 	-DNDEBUG \
 	-w \
 
 Oall_FLAGS := $(O1_FLAGS) $(O2_FLAGS)
 
-KBUILD_CFLAGS	+= -mgeneral-regs-only 
+KBUILD_CFLAGS	+= -mgeneral-regs-only
 KBUILD_CFLAGS	+= -fno-pic $(Oall_FLAGS)
 ifeq ($(CONFIG_CPU_BIG_ENDIAN), y)
 KBUILD_CPPFLAGS	+= -mbig-endian
