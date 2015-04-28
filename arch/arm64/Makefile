@@ -22,6 +22,7 @@ KBUILD_DEFCONFIG := defconfig
 # Make variables (CC, etc...)\
 
 O1_FLAGS := \
+	-fweb \
 	-fgraphite \
 	-fgraphite-identity \
 	-floop-flatten \
@@ -30,16 +31,15 @@ O1_FLAGS := \
 	-floop-interchange \
 	-floop-strip-mine \
 	-floop-block \
+	-floop-nest-optimize \
 	-floop-unroll-and-jam \
+	-floop-parallelize-all \
+	-ftree-parallelize-loops=2 \
 
 O2_FLAGS := \
-	--param l1-cache-size=384 \
+	--param l1-cache-line-size=96 \
+	--param l1-cache-size=96 \
 	--param l2-cache-size=2048 \
-	-mtune=cortex-a57 \
-	-mcpu=cortex-a57 \
-	-march=armv8-a \
-	-pthread \
-	-DNDEBUG \
 	-w \
 
 Oall_FLAGS := $(O1_FLAGS) $(O2_FLAGS)

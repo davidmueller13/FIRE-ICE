@@ -342,12 +342,11 @@ CHECK		= sparse
 
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
-KERNELFLAGS	= -pthread -fgcse-lm -fgcse-sm -fsched-spec-load -ffast-math -fsingle-precision-constant -DNDEBUG -march=armv8-a -mtune=cortex-a57 -mcpu=cortex-a57 --param l1-cache-size=384 --param l2-cache-size=2048
-MODFLAGS	= -DMODULE -lto $(KERNELFLAGS)
-CFLAGS_MODULE   = $(MODFLAGS)
-AFLAGS_MODULE   = $(MODFLAGS)
+KERNELFLAGS	= -fgcse-lm -fgcse-sm -fsched-spec-load -ffast-math -fsingle-precision-constant -march=armv8-a+crypto -mtune=cortex-a57 -mcpu=cortex-a57
+CFLAGS_MODULE   =
+AFLAGS_MODULE   =
 LDFLAGS_MODULE  = -T $(srctree)/scripts/module-common.lds
-CFLAGS_KERNEL	= $(KERNELFLAGS) -march=armv8-a+crypto
+CFLAGS_KERNEL	= $(KERNELFLAGS)
 AFLAGS_KERNEL	= $(KERNELFLAGS)
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
@@ -369,7 +368,7 @@ LINUXINCLUDE    := \
 		-Iinclude \
 		$(USERINCLUDE)
 
-KBUILD_CPPFLAGS := -D__KERNEL__ $(KERNELFLAGS)
+KBUILD_CPPFLAGS := -D__KERNEL__
 
 KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
@@ -578,7 +577,7 @@ else
 ifdef CONFIG_LESS_GCC_OPT
 KBUILD_CFLAGS	+= -O1
 else
-KBUILD_CFLAGS	+= -O2
+KBUILD_CFLAGS	+= -O3
 endif
 endif
 
