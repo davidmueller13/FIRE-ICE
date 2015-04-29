@@ -1,0 +1,43 @@
+#!/system/bin/sh
+
+if [ "$1" == "-h" ]; then
+echo "
+ROOT is required.
+
+	-h = help
+	-s = set backlight (1-255)   
+	-u = unlock backlight
+	-l = lock backlight
+	-r = current value
+"
+fi
+
+if [ "$1" == "-s" ]; then
+
+	chmod 777 /sys/devices/platform/tegra-dsi-backlight.0/backlight/tegra-dsi-backlight.0/actual_brightness 
+	chmod 777 /sys/devices/platform/tegra-dsi-backlight.0/backlight/tegra-dsi-backlight.0/brightness 
+	echo "$2" > /sys/devices/platform/tegra-dsi-backlight.0/backlight/tegra-dsi-backlight.0/brightness && echo "$2" > /sys/devices/platform/tegra-dsi-backlight.0/backlight/tegra-dsi-backlight.0/actual_brightness
+	chmod 444 /sys/devices/platform/tegra-dsi-backlight.0/backlight/tegra-dsi-backlight.0/actual_brightness
+	chmod 664 /sys/devices/platform/tegra-dsi-backlight.0/backlight/tegra-dsi-backlight.0/brightness
+fi
+
+if [ "$1" == "-u" ]; then
+	chmod 444 /sys/devices/platform/tegra-dsi-backlight.0/backlight/tegra-dsi-backlight.0/actual_brightness
+	chmod 664 /sys/devices/platform/tegra-dsi-backlight.0/backlight/tegra-dsi-backlight.0/brightness
+fi
+
+if [ "$1" == "-l" ]; then
+	chmod 444 /sys/devices/platform/tegra-dsi-backlight.0/backlight/tegra-dsi-backlight.0/actual_brightness
+	chmod 444 /sys/devices/platform/tegra-dsi-backlight.0/backlight/tegra-dsi-backlight.0/brightness
+else 
+	if [ "$3" == "-l" ]; then
+		chmod 444 /sys/devices/platform/tegra-dsi-backlight.0/backlight/tegra-dsi-backlight.0/actual_brightness
+		chmod 444 /sys/devices/platform/tegra-dsi-backlight.0/backlight/tegra-dsi-backlight.0/brightness
+	fi
+fi
+
+if [ "$1" == "-r" ]; then
+	cat /sys/devices/platform/tegra-dsi-backlight.0/backlight/tegra-dsi-backlight.0/brightness
+fi
+
+

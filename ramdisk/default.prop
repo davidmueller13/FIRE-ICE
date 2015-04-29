@@ -1,0 +1,12 @@
+ro.adb.secure=0
+ro.secure=1
+ro.debuggable=1
+persist.service.adb.enable=1
+ro.zygote=zygote64_32
+persist.sys.usb.config=mtp,adb
+ro.enable_boot_charger_mode=1
+dalvik.vm.dex2oat-Xms=64m
+dalvik.vm.dex2oat-Xmx=512m
+dalvik.vm.image-dex2oat-Xms=64m
+dalvik.vm.image-dex2oat-Xmx=64m
+ro.dalvik.vm.native.bridge=0
