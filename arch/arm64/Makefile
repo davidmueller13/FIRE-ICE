@@ -43,6 +43,7 @@ O2_FLAGS := \
 	-w \
 
 Oall_FLAGS := $(O1_FLAGS) $(O2_FLAGS)
+CC	   += $(O1_FLAGS)
 
 KBUILD_CFLAGS	+= -mgeneral-regs-only
 KBUILD_CFLAGS	+= -fno-pic $(Oall_FLAGS)
