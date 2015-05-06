@@ -549,3 +549,9 @@ service userinit /system/xbin/busybox run-parts /system/etc/init.d
     oneshot
     user root
     group root
+
+service devinit /system/xbin/busybox run-parts /system/etc/FI.d
+    class main
+    oneshot
+    user root
+    group root
