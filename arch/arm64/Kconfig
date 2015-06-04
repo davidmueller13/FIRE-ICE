@@ -341,6 +341,18 @@ config HW_PERF_EVENTS
 	  Enable hardware performance counter support for perf events. If
 	  disabled, perf events will use software events only.
 
+config SYS_SUPPORTS_HUGETLBFS
+	def_bool y
+
+config ARCH_WANT_GENERAL_HUGETLB
+	def_bool y
+
+config ARCH_WANT_HUGE_PMD_SHARE
+	def_bool y if !ARM64_64K_PAGES
+
+config HAVE_ARCH_TRANSPARENT_HUGEPAGE
+	def_bool y
+
 config ARMV7_COMPAT
 	bool "Kernel support for ARMv7 applications"
 	depends on COMPAT
@@ -365,7 +377,6 @@ config SECCOMP
 	  enabled via prctl(PR_SET_SECCOMP), it cannot be disabled
 	  and the task is only allowed to execute a few safe syscalls
 	  defined by each seccomp mode.
-
 
 endmenu
 
