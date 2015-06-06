@@ -530,6 +530,9 @@ static void denver_show(struct seq_file *m)
 	u32 aidr;
 
 	asm volatile("mrs %0, AIDR_EL1" : "=r" (aidr) : );
+	seq_printf(m, "Processor\t: %s rev %d (%s)\n", cpu_name, read_cpuid_id() & 15, ELF_PLATFORM);
+	seq_printf(m, "Hardware\t: %s\n", machine_name);
+	seq_printf(m, "Serial\t\t: %08x%08x\n", system_serial_high, system_serial_low);
 	seq_printf(m, "MTS version\t: %u\n", aidr);
 }
 
@@ -601,7 +604,7 @@ static int c_show(struct seq_file *m, void *v)
 		seq_puts(m, "\n");
 
 		seq_printf(m, "CPU implementer\t: 0x%02x\n", (midr >> 24));
-		seq_printf(m, "CPU architecture: AArch64\n");
+		seq_printf(m, "CPU architecture: 8\n");
 		seq_printf(m, "CPU variant\t: 0x%x\n", ((midr >> 20) & 0xf));
 		seq_printf(m, "CPU part\t: 0x%03x\n", ((midr >> 4) & 0xfff));
 		seq_printf(m, "CPU revision\t: %d\n\n", (midr & 0xf));
