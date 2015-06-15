@@ -1,6 +1,6 @@
 GCOV_PROFILE := y
 
-subdir-ccflags-y := -Werror
+subdir-ccflags-y := -Werror -fno-strict-aliasing
 #
 # Makefile for the camera devices spec.
 #

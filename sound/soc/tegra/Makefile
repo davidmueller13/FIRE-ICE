@@ -1,6 +1,6 @@
 GCOV_PROFILE := y
 
-subdir-ccflags-y := -Werror
+subdir-ccflags-y := -Werror -fno-strict-aliasing
 
 # Tegra platform Support
 snd-soc-tegra-pcm-objs := tegra_pcm.o

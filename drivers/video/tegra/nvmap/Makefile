@@ -1,6 +1,6 @@
 GCOV_PROFILE := y
 
-subdir-ccflags-y := -Werror
+subdir-ccflags-y := -Werror -fno-strict-aliasing
 
 ifeq ($(CONFIG_ARM64),y)
 ccflags-y += -Iarch/arm/mach-tegra/include

@@ -4,7 +4,7 @@
 
 GCOV_PROFILE := y
 
-subdir-ccflags-y := -Werror
+subdir-ccflags-y := -Werror -fno-strict-aliasing
 
 obj-$(CONFIG_QCOM_USB_MODEM_POWER) += qcom_usb_modem_power.o
 obj-$(CONFIG_MSM_SUBSYSTEM_RESTART) += subsystem_notif.o
