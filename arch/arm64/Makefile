@@ -34,7 +34,6 @@ O1_FLAGS := \
 
 O2_FLAGS := \
 	-O3 \
-	-fstrict-aliasing \
 	--param l1-cache-size=192 \
 	--param l2-cache-size=2048 \
 
